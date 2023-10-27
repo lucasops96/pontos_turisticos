@@ -23,7 +23,7 @@ class PontoTuristicoViewSet(viewsets.ModelViewSet):
         id = self.request.query_params.get('id',None)
         nome = self.request.query_params.get('nome',None)
         descricao = self.request.query_params.get('descricao',None)
-        queryset = PontoTuristico.objects.all()
+        queryset = PontoTuristico.objects.filter(aprovado=True)
 
         if id:
             queryset = PontoTuristico.objects.filter(pk=id)
