@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -13,9 +14,9 @@ class PontoTuristicoViewSet(viewsets.ModelViewSet):
     """
     # queryset = PontoTuristico.objects.filter(aprovado=True)
     serializer_class = PontoTuristicoSerializer
-    filter_backends = [SearchFilter]
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
     search_fields = ['nome', 'descricao','endereco__linha1']
     # lookup_field = 'nome'
 
@@ -62,3 +63,15 @@ class PontoTuristicoViewSet(viewsets.ModelViewSet):
     @action(methods=['get'],detail=False)
     def teste(self,request):
         pass
+
+    @action(methods=['post'],detail=True)
+    def associa_atracoes(self,request,pk):
+        atracoes = request.data['ids']
+
+        ponto = PontoTuristico.objects.get(pk=pk)
+
+        ponto.atracoes.set(atracoes)
+
+        ponto.save()
+
+        return HttpResponse('OK')
